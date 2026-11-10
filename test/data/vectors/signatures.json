@@ -1,0 +1,297 @@
+{
+  "signHeader": {
+    "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+    "secret": "whsec_plugin_test_secret",
+    "timestamp": 1761638400,
+    "header": "t=1761638400,v1=34c05e780e334839328753e5d1b2fa20f7705b67b4489d2f29abda8695af92d9"
+  },
+  "cases": [
+    {
+      "name": "valid",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "t=1761638400,v1=34c05e780e334839328753e5d1b2fa20f7705b67b4489d2f29abda8695af92d9",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "ok"
+    },
+    {
+      "name": "clock 300 s ahead",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "t=1761638400,v1=34c05e780e334839328753e5d1b2fa20f7705b67b4489d2f29abda8695af92d9",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638700,
+      "tolerance": 300,
+      "expect": "ok"
+    },
+    {
+      "name": "clock 300 s behind",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "t=1761638400,v1=34c05e780e334839328753e5d1b2fa20f7705b67b4489d2f29abda8695af92d9",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638100,
+      "tolerance": 300,
+      "expect": "ok"
+    },
+    {
+      "name": "clock 301 s ahead",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "t=1761638400,v1=34c05e780e334839328753e5d1b2fa20f7705b67b4489d2f29abda8695af92d9",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638701,
+      "tolerance": 300,
+      "expect": "stale"
+    },
+    {
+      "name": "clock 301 s behind",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "t=1761638400,v1=34c05e780e334839328753e5d1b2fa20f7705b67b4489d2f29abda8695af92d9",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638099,
+      "tolerance": 300,
+      "expect": "stale"
+    },
+    {
+      "name": "wider tolerance",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "t=1761638400,v1=34c05e780e334839328753e5d1b2fa20f7705b67b4489d2f29abda8695af92d9",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638900,
+      "tolerance": 600,
+      "expect": "ok"
+    },
+    {
+      "name": "spaces around parts",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": " t=1761638400 , v1=34c05e780e334839328753e5d1b2fa20f7705b67b4489d2f29abda8695af92d9 ",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "ok"
+    },
+    {
+      "name": "unknown part is ignored",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "t=1761638400,v0=abc,v1=34c05e780e334839328753e5d1b2fa20f7705b67b4489d2f29abda8695af92d9",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "ok"
+    },
+    {
+      "name": "another secret",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "t=1761638400,v1=34c05e780e334839328753e5d1b2fa20f7705b67b4489d2f29abda8695af92d9",
+      "secrets": [
+        "whsec_other"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "mismatch"
+    },
+    {
+      "name": "old and new secret",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "t=1761638400,v1=34c05e780e334839328753e5d1b2fa20f7705b67b4489d2f29abda8695af92d9",
+      "secrets": [
+        "whsec_old",
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "ok"
+    },
+    {
+      "name": "changed body",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"open\"}}}",
+      "header": "t=1761638400,v1=34c05e780e334839328753e5d1b2fa20f7705b67b4489d2f29abda8695af92d9",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "mismatch"
+    },
+    {
+      "name": "re-encoded JSON",
+      "body": "{\n  \"id\": \"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\n  \"type\": \"invoice.paid\",\n  \"created_at\": \"2026-10-28T08:00:00.000Z\",\n  \"shop_id\": \"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\n  \"test\": true,\n  \"data\": {\n    \"invoice\": {\n      \"id\": \"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\n      \"status\": \"paid\"\n    }\n  }\n}",
+      "header": "t=1761638400,v1=34c05e780e334839328753e5d1b2fa20f7705b67b4489d2f29abda8695af92d9",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "mismatch"
+    },
+    {
+      "name": "two v1, second matches",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "t=1761638400,v1=0000000000000000000000000000000000000000000000000000000000000000,v1=34c05e780e334839328753e5d1b2fa20f7705b67b4489d2f29abda8695af92d9",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "ok"
+    },
+    {
+      "name": "uppercase hex",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "t=1761638400,v1=34C05E780E334839328753E5D1B2FA20F7705B67B4489D2F29ABDA8695AF92D9",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "malformed"
+    },
+    {
+      "name": "non-ASCII body",
+      "body": "{\"id\":\"1\",\"type\":\"webhook.test\",\"data\":{\"message\":\"Заказ № 7 — оплачен ✓\"}}",
+      "header": "t=1761638400,v1=0511e6c7a3fedaacbb490ee0bc17a199c61df55fee6102eaa42749fb4333c706",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "ok"
+    },
+    {
+      "name": "timestamp of another signature",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "t=1761638401,v1=34c05e780e334839328753e5d1b2fa20f7705b67b4489d2f29abda8695af92d9",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "mismatch"
+    },
+    {
+      "name": "empty header",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "missing"
+    },
+    {
+      "name": "no header",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": null,
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "missing"
+    },
+    {
+      "name": "only v1",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "v1=34c05e780e334839328753e5d1b2fa20f7705b67b4489d2f29abda8695af92d9",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "malformed"
+    },
+    {
+      "name": "only t",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "t=1761638400",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "malformed"
+    },
+    {
+      "name": "timestamp not a number",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "t=abc,v1=34c05e780e334839328753e5d1b2fa20f7705b67b4489d2f29abda8695af92d9",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "malformed"
+    },
+    {
+      "name": "short v1",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "t=1761638400,v1=34c05e78",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "malformed"
+    },
+    {
+      "name": "v1 not hex",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "t=1761638400,v1=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "malformed"
+    },
+    {
+      "name": "part without a key",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "=1,t=1761638400,v1=34c05e780e334839328753e5d1b2fa20f7705b67b4489d2f29abda8695af92d9",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "malformed"
+    },
+    {
+      "name": "garbage",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "garbage",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "malformed"
+    },
+    {
+      "name": "far timestamp",
+      "body": "{\"id\":\"0b0e1c1e-6f0c-4c56-9a8e-2d6c1e1f0a01\",\"type\":\"invoice.paid\",\"created_at\":\"2026-10-28T08:00:00.000Z\",\"shop_id\":\"5a1f6b9e-1c2d-4e3f-8a9b-0c1d2e3f4a5b\",\"test\":true,\"data\":{\"invoice\":{\"id\":\"7c9e6679-7425-40de-944b-e07fc1f90ae7\",\"status\":\"paid\"}}}",
+      "header": "t=99999999999999,v1=34c05e780e334839328753e5d1b2fa20f7705b67b4489d2f29abda8695af92d9",
+      "secrets": [
+        "whsec_plugin_test_secret"
+      ],
+      "now": 1761638400,
+      "tolerance": 300,
+      "expect": "stale"
+    }
+  ]
+}

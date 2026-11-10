@@ -1,0 +1,80 @@
+{
+  "cases": [
+    {
+      "status": 400,
+      "body": { "error": { "code": "VALIDATION_ERROR", "message": "Request validation failed", "details": { "currency": "Required", "items.0.price": "A decimal number" } } },
+      "expect": { "error": "InvalidRequest", "code": "VALIDATION_ERROR", "message": "Request validation failed", "details": { "currency": "Required", "items.0.price": "A decimal number" } }
+    },
+    {
+      "status": 401,
+      "body": { "error": { "code": "UNAUTHORIZED", "message": "Invalid API key" } },
+      "expect": { "error": "Authentication", "code": "UNAUTHORIZED", "details": null }
+    },
+    {
+      "status": 403,
+      "body": { "error": { "code": "KEY_ACCESS_DENIED", "message": "This API key works with invoices only; use a full-access key for this method" } },
+      "expect": { "error": "PermissionDenied", "code": "KEY_ACCESS_DENIED" }
+    },
+    {
+      "status": 403,
+      "body": { "error": { "code": "IP_NOT_ALLOWED", "message": "IP not allowed", "details": { "ip": "203.0.113.7" } } },
+      "expect": { "error": "PermissionDenied", "code": "IP_NOT_ALLOWED", "details": { "ip": "203.0.113.7" } }
+    },
+    {
+      "status": 404,
+      "body": { "error": { "code": "NOT_FOUND", "message": "Invoice not found" } },
+      "expect": { "error": "NotFound", "code": "NOT_FOUND" }
+    },
+    {
+      "status": 409,
+      "body": { "error": { "code": "IDEMPOTENCY_CONFLICT", "message": "Idempotency key reused with another body" } },
+      "expect": { "error": "Conflict", "code": "IDEMPOTENCY_CONFLICT" }
+    },
+    {
+      "status": 413,
+      "body": { "error": { "code": "VALIDATION_ERROR", "message": "Request body is too large" } },
+      "expect": { "error": "Api", "code": "VALIDATION_ERROR" }
+    },
+    {
+      "status": 422,
+      "body": { "error": { "code": "INSUFFICIENT_BALANCE", "message": "Not enough funds" } },
+      "expect": { "error": "Unprocessable", "code": "INSUFFICIENT_BALANCE" }
+    },
+    {
+      "status": 429,
+      "headers": { "retry-after": "7" },
+      "body": { "error": { "code": "RATE_LIMITED", "message": "Too many requests" } },
+      "expect": { "error": "RateLimit", "code": "RATE_LIMITED", "retryAfter": 7 }
+    },
+    {
+      "status": 429,
+      "body": { "error": { "code": "RATE_LIMITED", "message": "Too many requests" } },
+      "expect": { "error": "RateLimit", "code": "RATE_LIMITED", "retryAfter": null }
+    },
+    {
+      "status": 500,
+      "body": { "error": { "code": "INTERNAL_ERROR", "message": "Internal error" } },
+      "expect": { "error": "Api", "code": "INTERNAL_ERROR" }
+    },
+    {
+      "status": 503,
+      "body": { "error": { "code": "RATE_UNAVAILABLE", "message": "No fresh rate" } },
+      "expect": { "error": "ServiceUnavailable", "code": "RATE_UNAVAILABLE" }
+    },
+    {
+      "status": 404,
+      "body": { "message": "Not found" },
+      "expect": { "error": "InvalidResponse" }
+    },
+    {
+      "status": 502,
+      "text": "<html><body>Bad gateway</body></html>",
+      "expect": { "error": "InvalidResponse" }
+    },
+    {
+      "status": 400,
+      "body": { "error": { "code": "SOMETHING_NEW", "message": "A code this library does not know yet" } },
+      "expect": { "error": "InvalidRequest", "code": "SOMETHING_NEW" }
+    }
+  ]
+}

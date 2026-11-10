@@ -1,0 +1,182 @@
+{
+  "cases": [
+    {
+      "name": "safe: 503 twice, then 200",
+      "retry": "safe",
+      "steps": [
+        { "status": 503, "body": { "error": { "code": "CORE_UNAVAILABLE", "message": "Core is unavailable" } } },
+        { "status": 503, "body": { "error": { "code": "CORE_UNAVAILABLE", "message": "Core is unavailable" } } },
+        { "status": 200, "body": { "invoice": { "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7" } } }
+      ],
+      "expect": { "attempts": 3, "result": "ok", "sleeps": [[375, 625], [750, 1250]] }
+    },
+    {
+      "name": "safe: 503 every time",
+      "retry": "safe",
+      "steps": [
+        { "status": 503, "body": { "error": { "code": "CORE_UNAVAILABLE", "message": "Core is unavailable" } } },
+        { "status": 503, "body": { "error": { "code": "CORE_UNAVAILABLE", "message": "Core is unavailable" } } },
+        { "status": 503, "body": { "error": { "code": "CORE_UNAVAILABLE", "message": "Core is unavailable" } } }
+      ],
+      "expect": { "attempts": 3, "result": "error", "error": "ServiceUnavailable", "code": "CORE_UNAVAILABLE" }
+    },
+    {
+      "name": "safe: maxRetries 0",
+      "retry": "safe",
+      "maxRetries": 0,
+      "steps": [{ "status": 503, "body": { "error": { "code": "CORE_UNAVAILABLE", "message": "Core is unavailable" } } }],
+      "expect": { "attempts": 1, "result": "error", "error": "ServiceUnavailable", "code": "CORE_UNAVAILABLE" }
+    },
+    {
+      "name": "safe: 500 is not retried",
+      "retry": "safe",
+      "steps": [{ "status": 500, "body": { "error": { "code": "INTERNAL_ERROR", "message": "Internal error" } } }],
+      "expect": { "attempts": 1, "result": "error", "error": "Api", "code": "INTERNAL_ERROR" }
+    },
+    {
+      "name": "safe: 400 is not retried",
+      "retry": "safe",
+      "steps": [{ "status": 400, "body": { "error": { "code": "VALIDATION_ERROR", "message": "Request validation failed", "details": { "limit": "Too big" } } } }],
+      "expect": { "attempts": 1, "result": "error", "error": "InvalidRequest", "code": "VALIDATION_ERROR" }
+    },
+    {
+      "name": "safe: timeout, then 200",
+      "retry": "safe",
+      "steps": [{ "network": "timeout" }, { "status": 200, "body": { "invoice": { "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7" } } }],
+      "expect": { "attempts": 2, "result": "ok", "sleeps": [[375, 625]] }
+    },
+    {
+      "name": "safe: HTML 502 from a proxy, then 200",
+      "retry": "safe",
+      "steps": [{ "status": 502, "text": "<html><body>Bad gateway</body></html>" }, { "status": 200, "body": { "invoice": { "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7" } } }],
+      "expect": { "attempts": 2, "result": "ok" }
+    },
+    {
+      "name": "safe: redirect is not followed",
+      "retry": "safe",
+      "steps": [{ "status": 301, "headers": { "location": "https://elsewhere.example/api/v1/invoices" }, "text": "" }],
+      "expect": { "attempts": 1, "result": "error", "error": "InvalidResponse" }
+    },
+    {
+      "name": "safe: 200 that is not JSON",
+      "retry": "safe",
+      "steps": [{ "status": 200, "text": "<html>maintenance</html>" }],
+      "expect": { "attempts": 1, "result": "error", "error": "InvalidResponse" }
+    },
+    {
+      "name": "safe: 429 with Retry-After 1",
+      "retry": "safe",
+      "steps": [
+        { "status": 429, "headers": { "retry-after": "1" }, "body": { "error": { "code": "RATE_LIMITED", "message": "Too many requests" } } },
+        { "status": 200, "body": { "invoice": { "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7" } } }
+      ],
+      "expect": { "attempts": 2, "result": "ok", "sleeps": [1000] }
+    },
+    {
+      "name": "safe: 429 with details.retry_after 2",
+      "retry": "safe",
+      "steps": [
+        { "status": 429, "body": { "error": { "code": "RATE_LIMITED", "message": "Too many requests", "details": { "retry_after": 2 } } } },
+        { "status": 200, "body": { "invoice": { "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7" } } }
+      ],
+      "expect": { "attempts": 2, "result": "ok", "sleeps": [2000] }
+    },
+    {
+      "name": "safe: 429 asks to wait 60 s, longer than maxRetryDelay",
+      "retry": "safe",
+      "steps": [{ "status": 429, "headers": { "retry-after": "60" }, "body": { "error": { "code": "RATE_LIMITED", "message": "Too many requests" } } }],
+      "expect": { "attempts": 1, "result": "error", "error": "RateLimit", "code": "RATE_LIMITED", "retryAfter": 60 }
+    },
+    {
+      "name": "idempotent: connection reset, then the replay",
+      "retry": "idempotent",
+      "steps": [{ "network": "reset" }, { "status": 200, "body": { "invoice": { "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7" } } }],
+      "expect": { "attempts": 2, "result": "ok", "replayed": true }
+    },
+    {
+      "name": "idempotent: 201 is not a replay",
+      "retry": "idempotent",
+      "steps": [{ "status": 201, "body": { "invoice": { "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7" } } }],
+      "expect": { "attempts": 1, "result": "ok", "replayed": false }
+    },
+    {
+      "name": "idempotent: 422 FUNDS_NOT_MATURE is never retried",
+      "retry": "idempotent",
+      "steps": [{ "status": 422, "body": { "error": { "code": "FUNDS_NOT_MATURE", "message": "Funds are not mature", "details": { "retry_after": 3600 } } } }],
+      "expect": { "attempts": 1, "result": "error", "error": "Unprocessable", "code": "FUNDS_NOT_MATURE" }
+    },
+    {
+      "name": "unsafe: timeout is not retried",
+      "retry": "unsafe",
+      "steps": [{ "network": "timeout" }],
+      "expect": { "attempts": 1, "result": "error", "error": "ApiTimeout", "sent": true }
+    },
+    {
+      "name": "unsafe: reset after sending is not retried",
+      "retry": "unsafe",
+      "steps": [{ "network": "reset" }],
+      "expect": { "attempts": 1, "result": "error", "error": "ApiConnection", "sent": true }
+    },
+    {
+      "name": "unsafe: connection refused, then 201",
+      "retry": "unsafe",
+      "steps": [{ "network": "refused" }, { "status": 201, "body": { "address": { "id": "6f1c2b0e-4d8a-4c3e-9b21-7a5d0e3f8c42" } } }],
+      "expect": { "attempts": 2, "result": "ok" }
+    },
+    {
+      "name": "unsafe: connection refused every time",
+      "retry": "unsafe",
+      "steps": [{ "network": "refused" }, { "network": "refused" }, { "network": "refused" }],
+      "expect": { "attempts": 3, "result": "error", "error": "ApiConnection", "sent": false }
+    },
+    {
+      "name": "unsafe: 503, then 201",
+      "retry": "unsafe",
+      "steps": [
+        { "status": 503, "body": { "error": { "code": "CORE_UNAVAILABLE", "message": "Core is unavailable" } } },
+        { "status": 201, "body": { "address": { "id": "6f1c2b0e-4d8a-4c3e-9b21-7a5d0e3f8c42" } } }
+      ],
+      "expect": { "attempts": 2, "result": "ok" }
+    },
+    {
+      "name": "unsafe: 502 is not retried",
+      "retry": "unsafe",
+      "steps": [{ "status": 502, "text": "<html><body>Bad gateway</body></html>" }],
+      "expect": { "attempts": 1, "result": "error", "error": "InvalidResponse" }
+    },
+    {
+      "name": "unsafe: 429 is retried",
+      "retry": "unsafe",
+      "steps": [
+        { "status": 429, "headers": { "retry-after": "1" }, "body": { "error": { "code": "RATE_LIMITED", "message": "Too many requests" } } },
+        { "status": 201, "body": { "address": { "id": "6f1c2b0e-4d8a-4c3e-9b21-7a5d0e3f8c42" } } }
+      ],
+      "expect": { "attempts": 2, "result": "ok", "sleeps": [1000] }
+    },
+    {
+      "name": "cancel: retry finds the invoice cancelled, the library reads it",
+      "retry": "cancel",
+      "steps": [
+        { "network": "timeout" },
+        { "status": 409, "body": { "error": { "code": "INVOICE_NOT_OPEN", "message": "Invoice is not open", "details": { "status": "cancelled" } } } },
+        { "status": 200, "body": { "invoice": { "id": "7c9e6679-7425-40de-944b-e07fc1f90ae7", "status": "cancelled" } } }
+      ],
+      "expect": { "attempts": 3, "result": "ok", "lastRequest": "GET /invoices/7c9e6679-7425-40de-944b-e07fc1f90ae7" }
+    },
+    {
+      "name": "cancel: not open on the first attempt",
+      "retry": "cancel",
+      "steps": [{ "status": 409, "body": { "error": { "code": "INVOICE_NOT_OPEN", "message": "Invoice is not open", "details": { "status": "paid" } } } }],
+      "expect": { "attempts": 1, "result": "error", "error": "Conflict", "code": "INVOICE_NOT_OPEN" }
+    },
+    {
+      "name": "cancel: retry finds the invoice paid",
+      "retry": "cancel",
+      "steps": [
+        { "network": "timeout" },
+        { "status": 409, "body": { "error": { "code": "INVOICE_NOT_OPEN", "message": "Invoice is not open", "details": { "status": "paid" } } } }
+      ],
+      "expect": { "attempts": 2, "result": "error", "error": "Conflict", "code": "INVOICE_NOT_OPEN" }
+    }
+  ]
+}
