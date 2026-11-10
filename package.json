@@ -3,6 +3,14 @@
   "version": "0.1.0",
   "description": "Official Node.js library for the CoinsPay crypto payments API",
   "license": "MIT",
+  "homepage": "https://coinspay.app/docs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coinspayapp/coinspay-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/coinspayapp/coinspay-node/issues"
+  },
   "keywords": ["coinspay", "crypto", "payments", "invoices", "webhooks", "usdt", "bitcoin"],
   "engines": {
     "node": ">=18"
